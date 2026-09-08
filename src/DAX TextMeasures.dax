@@ -1,0 +1,310 @@
+---- MODEL MEASURES BEGIN ----
+MEASURE 'DAX'[COGS] = "Placeholder"
+
+MEASURE 'DAX'[color label COGS] =
+    VAR _prev = [_0 COGS] - [_1 cogs prev]
+    RETURN
+        IF (
+            _prev < 0,
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Neg" ),
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Pos" )
+        )
+
+MEASURE 'DAX'[color label GP] =
+    VAR _prev = [_0 Gross Profit] - [_1 Gross Profit Prev]
+    RETURN
+        IF (
+            _prev < 0,
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Neg" ),
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Pos" )
+        )
+
+MEASURE 'DAX'[color label quant] =
+    VAR _prev = [_0 Quantity] - [_1 quantity prev]
+    RETURN
+        IF (
+            _prev < 0,
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Neg" ),
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Pos" )
+        )
+
+MEASURE 'DAX'[color label sales] =
+    VAR _prev = [_0 Sales] - [_1 Sales Prev year]
+    RETURN
+        IF (
+            _prev < 0,
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Neg" ),
+            LOOKUPVALUE ( Colors[hex], Colors[type], "Pos" )
+        )
+
+MEASURE 'DAX'[Gross Profit] = "Placeholder"
+
+MEASURE 'DAX'[label COGS] =
+    VAR _prev = [_1 cogs prev]
+    VAR _result =
+        IF (
+            _prev < 1000000,
+            FORMAT ( DIVIDE ( _prev, 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( _prev, 1000000 ), "# ###.0M" )
+        )
+    RETURN
+        "PY: " & _result
+
+MEASURE 'DAX'[label GP] =
+    VAR _prev = [_1 Gross Profit Prev]
+    VAR _result =
+        IF (
+            _prev < 1000000,
+            FORMAT ( DIVIDE ( _prev, 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( _prev, 1000000 ), "# ###.0M" )
+        )
+    RETURN
+        "PY: " & _result
+
+MEASURE 'DAX'[label quantity] =
+    VAR _prev = [_1 quantity prev]
+    VAR _result =
+        "PY: " & FORMAT ( DIVIDE ( _prev, 1000 ), "# ###.0K" )
+    RETURN
+        _result
+
+MEASURE 'DAX'[label ref COGS] =
+    VAR _act = [_0 COGS]
+    VAR _prev = [_1 cogs prev]
+    VAR _diff = _act - _prev
+    VAR _diff_pct =
+        DIVIDE ( _act, _prev ) - 1
+    VAR _result1 =
+        SWITCH (
+            TRUE (),
+            ABS ( _diff ) < 1000, FORMAT ( _diff, "+# ###.0;-#,##0.0;0.0" ),
+            ABS ( _diff ) < 1000000, FORMAT ( DIVIDE ( _diff, 1000 ), "+# ###.0K;-#,##0.0K" ),
+            FORMAT ( DIVIDE ( _diff, 1000000 ), "+# ###.0M;-#,##0.0M" )
+        )
+    VAR _result2 =
+        FORMAT ( _diff_pct, "0.0%" )
+    RETURN
+        _result1 & " | " & _result2 & IF ( _diff < 0, " ▼", " ▲" )
+
+MEASURE 'DAX'[Label ref GP] =
+    VAR _act = [_0 Gross Profit]
+    VAR _prev = [_1 Gross Profit Prev]
+    VAR _diff = _act - _prev
+    VAR _diff_pct =
+        DIVIDE ( _act, _prev ) - 1
+    VAR _result1 =
+        SWITCH (
+            TRUE (),
+            ABS ( _diff ) < 1000, FORMAT ( _diff, "+# ###.0;-#,##0.0;0.0" ),
+            ABS ( _diff ) < 1000000, FORMAT ( DIVIDE ( _diff, 1000 ), "+# ###.0K;-#,##0.0K" ),
+            FORMAT ( DIVIDE ( _diff, 1000000 ), "+# ###.0M;-#,##0.0M" )
+        )
+    VAR _result2 =
+        FORMAT ( _diff_pct, "0.0%" )
+    RETURN
+        _result1 & " | " & _result2 & IF ( _diff < 0, " ▼", " ▲" )
+
+MEASURE 'DAX'[label ref quant] =
+    VAR _act = [_0 Quantity]
+    VAR _prev = [_1 quantity prev]
+    VAR _diff = _act - _prev
+    VAR _diff_pct =
+        DIVIDE ( _act, _prev ) - 1
+    VAR _result1 =
+        SWITCH (
+            TRUE (),
+            ABS ( _diff ) < 1000, FORMAT ( _diff, "+# ###;-# ###" ),
+            FORMAT ( DIVIDE ( _diff, 1000 ), "+# ###.0K;-# ###.0K" )
+        )
+    VAR _result2 =
+        FORMAT ( _diff_pct, "0.0%" )
+    RETURN
+        _result1 & " | " & _result2 & IF ( _diff < 0, " ▼", " ▲" )
+
+MEASURE 'DAX'[label ref sales] =
+    VAR _act = [_0 Sales]
+    VAR _prev = [_1 Sales Prev year]
+    VAR _diff = _act - _prev
+    VAR _diff_pct =
+        DIVIDE ( _act, _prev ) - 1
+    VAR _result1 =
+        SWITCH (
+            TRUE (),
+            ABS ( _diff ) < 1000, FORMAT ( _diff, "+# ###.0;-#,##0.0;0.0" ),
+            ABS ( _diff ) < 1000000, FORMAT ( DIVIDE ( _diff, 1000 ), "+# ###.0K;-#,##0.0K" ),
+            FORMAT ( DIVIDE ( _diff, 1000000 ), "+# ###.0M;-#,##0.0M" )
+        )
+    VAR _result2 =
+        FORMAT ( _diff_pct, "0.0%" )
+    RETURN
+        _result1 & " | " & _result2 & IF ( _diff < 0, " ▼", " ▲" )
+
+MEASURE 'DAX'[label sales] =
+    VAR _prev = [_1 Sales Prev year]
+    VAR _result =
+        IF (
+            _prev < 1000000,
+            FORMAT ( DIVIDE ( _prev, 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( _prev, 1000000 ), "# ###.0M" )
+        )
+    RETURN
+        "PY: " & _result & " "
+
+MEASURE 'DAX'[Subtitle] =
+    VAR _sel =
+        SELECTEDVALUE ( 'Calendar'[Month], "all" )
+    VAR _date =
+        MAX ( 'Calendar'[Date] )
+    VAR _act =
+        FORMAT ( _date, "mmm'yy" )
+    VAR _prev =
+        FORMAT ( EDATE ( _date, -12 ), "mmm'yy" )
+    VAR _act_all =
+        FORMAT ( _date, "yyyy" )
+    VAR _prev_all =
+        FORMAT ( EDATE ( _date, -12 ), "yyyy" )
+    RETURN
+        IF (
+            _sel = "all",
+            "Per Period: " & _act_all & " vs " & _prev_all,
+            "Per Period: " & _act & " vs " & _prev
+        )
+
+
+
+MEASURE 'DAX'[Table title] =
+    VAR _sel =
+        SELECTEDVALUE ( 'Param Granularity level'[Parameter Order] )
+    VAR _val =
+        SWITCH ( _sel, 0, "Category", 1, "Subcategory", 2, "Product" )
+    RETURN
+        "Performance Metrics breakdown on " & _val & " level"
+
+MEASURE 'DAX'[Title Description] =
+    VAR _prof = [Delta Profit]
+    VAR _gp = [_0 Gross Profit]
+    VAR _prof_form =
+        IF (
+            ABS ( _prof ) > 1000000,
+            FORMAT ( DIVIDE ( ABS ( _prof ), 1000000 ), "# ###.0M UAH" ),
+            FORMAT ( DIVIDE ( ABS ( _prof ), 1000 ), "# ###.0K UAH" )
+        )
+    VAR _gp_form =
+        IF (
+            ABS ( _gp ) > 1000000,
+            FORMAT ( DIVIDE ( ABS ( _gp ), 1000000 ), "# ###.0M UAH" ),
+            FORMAT ( DIVIDE ( ABS ( _gp ), 1000 ), "# ###.0K UAH" )
+        )
+    VAR _pos = "This year's profit figures exceeded last year's results by "
+    VAR _neg = "This year's profit figures are lower than last year's results by "
+    VAR _even = "This year's profit figures are unchanged from last year. "
+    VAR _res = " and amounted to "
+    RETURN
+        SWITCH (
+            TRUE (),
+            _prof > 0,
+                _pos & _prof_form & _res & _gp_form,
+            _prof < 0,
+                _neg & _prof_form & _res & _gp_form,
+            _even & _res & _gp_form
+        )
+
+MEASURE 'DAX'[tooltip body] =
+    VAR _sel =
+        SELECTEDVALUE ( ChartColumns[ColumnName] )
+    VAR _am = [Factor Amount]
+    VAR _am_form =
+        IF (
+            ABS ( _am ) < 1000000,
+            FORMAT ( DIVIDE ( ABS ( _am ), 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( ABS ( _am ), 1000000 ), "# ###.0M" )
+        )
+    VAR _updown =
+        IF ( _am < 0, "reduced ", IF ( _am > 0, "increased ", "didn't affect" ) )
+    VAR _updown_num =
+        IF ( _am <> 0, " by " & _am_form )
+    VAR _vol = _updown_num
+    RETURN
+        IF ( _sel = "GP Act" || _sel = "GP PM", BLANK (), _vol )
+
+MEASURE 'DAX'[tooltip body 1] =
+    VAR _sel =
+        SELECTEDVALUE ( ChartColumns[ColumnName] )
+    RETURN
+        SWITCH (
+            _sel,
+            "Volume", "Changes in Solded Quantity",
+            "Mix", "Changes in MIX of products",
+            "Price", "Changes in Weighted Average Price",
+            "COGS", "Changes in Weighted Average Cost of Product",
+            "Delisted SKUs", "Removal products from sale",
+            "New SKUs", "Adding new products",
+            BLANK ()
+        )
+
+MEASURE 'DAX'[tooltip body 2] =
+    VAR _sel =
+        SELECTEDVALUE ( ChartColumns[ColumnName] )
+    VAR _first =
+        SWITCH (
+            _sel,
+            "Volume", "Changes in Solded Quantity",
+            "Mix", "Changes in MIX of products",
+            "Price", "Changes in Weighted Average Price",
+            "COGS", "Changes in Weighted Average Cost of Product",
+            "Delisted SKUs", "Removal products from sale",
+            "New SKUs", "Adding new products"
+        )
+    VAR _am = [Factor Amount]
+    VAR _am_form =
+        IF (
+            _am < 1000000,
+            FORMAT ( DIVIDE ( ABS ( _am ), 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( ABS ( _am ), 1000000 ), "# ###.0M" )
+        )
+    VAR _updown =
+        IF ( _am < 0, "reduced", IF ( _am > 0, "increased", "didn't affect" ) )
+    RETURN
+        IF (
+            _sel = "GP Act" || _sel = "GP PM",
+            BLANK (),
+            _updown & " Gross Profit Amount"
+        )
+
+MEASURE 'DAX'[tooltip Header] =
+    VAR _m =
+        FORMAT ( MAX ( 'Calendar'[Date] ), "mmm" )
+    VAR _y =
+        YEAR ( MAX ( 'Calendar'[Date] ) )
+    VAR _y_p =
+        YEAR ( MAX ( 'Calendar'[Date] ) ) - 1
+    VAR _gp = [_0 Gross Profit]
+    VAR _gp_p = [_1 Gross Profit Prev]
+    VAR _vari = _gp - _gp_p
+    VAR _up_down =
+        IF ( _vari < 0, "decreased ", IF ( _vari > 0, "increased ", "didn't change" ) )
+    VAR _result =
+        IF (
+            _gp_p < 1000000,
+            FORMAT ( DIVIDE ( _gp_p, 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( _gp_p, 1000000 ), "# ###.0M" )
+        )
+    VAR _result_act =
+        IF (
+            _gp < 1000000,
+            FORMAT ( DIVIDE ( _gp, 1000 ), "# ###.0K" ),
+            FORMAT ( DIVIDE ( _gp, 1000000 ), "# ###.0M" )
+        )
+    RETURN
+        " from " & _result & " in " & _m & " " & _y_p & " to " & _result_act & " in " & _m & " " & _y
+
+MEASURE 'DAX'[tooltip Header 2] =
+    VAR _gp = [_0 Gross Profit]
+    VAR _gp_p = [_1 Gross Profit Prev]
+    VAR _vari = _gp - _gp_p
+    VAR _up_down =
+        IF ( _vari < 0, "decreased ", IF ( _vari > 0, "increased ", "didn't change" ) )
+    RETURN
+        _up_down
+
+---- MODEL MEASURES END ----

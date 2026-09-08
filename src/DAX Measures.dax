@@ -1,0 +1,252 @@
+﻿---- MODEL MEASURES BEGIN ----
+MEASURE 'DAX'[_0 COGS] =
+    SUMX ( FactSales, FactSales[UnitCost] * FactSales[Quantity] )
+
+MEASURE 'DAX'[_0 Gross Profit] = [_0 Sales] - [_0 COGS]
+
+MEASURE 'DAX'[_0 Quantity] =
+    SUM ( FactSales[Quantity] )
+
+MEASURE 'DAX'[_0 Sales] =
+    SUMX ( FactSales, FactSales[NetPrice] * FactSales[Quantity] )
+
+MEASURE 'DAX'[_0 W Av Cost] =
+    DIVIDE (
+        SUMX ( FactSales, FactSales[Quantity] * FactSales[UnitCost] ),
+        SUM ( FactSales[Quantity] )
+    )
+
+MEASURE 'DAX'[_0 W Av Price] =
+    DIVIDE (
+        SUMX ( FactSales, FactSales[Quantity] * FactSales[NetPrice] ),
+        SUM ( FactSales[Quantity] )
+    )
+
+MEASURE 'DAX'[_1 cogs prev] =
+    CALCULATE ( [_0 COGS], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+
+MEASURE 'DAX'[_1 Gross Profit Prev] =
+    VAR _sales =
+        CALCULATE ( [_0 Sales], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+    VAR _cogs =
+        CALCULATE ( [_0 COGS], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+    RETURN
+        _sales - _cogs
+
+MEASURE 'DAX'[_1 quantity prev] =
+    CALCULATE ( [_0 Quantity], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+
+MEASURE 'DAX'[_1 Sales Prev year] =
+    CALCULATE ( [_0 Sales], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+
+MEASURE 'DAX'[_1 W Av Price prev] =
+    CALCULATE ( [_0 W Av Price], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+
+
+MEASURE 'DAX'[Cogs Factor] =
+    VAR _both_periods =
+        GetProductsWithSalesBothPeriods ()
+    VAR _q_prev =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _q =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    RETURN
+        SUMX (
+            _both_periods,
+            [_0 Quantity]
+                * (
+                    [_0 W Av Cost]
+                        - CALCULATE ( [_0 W Av Cost], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+                )
+        ) * -1
+
+
+MEASURE 'DAX'[Delta Profit] = [_0 Gross Profit] - [_1 Gross Profit Prev]
+
+MEASURE 'DAX'[DynamicMeasure] =
+    VAR _both_periods =
+        GetProductsWithSalesBothPeriods ()
+    VAR _sales =
+        SUMX ( _both_periods, [_0 Sales] )
+    VAR _quant =
+        SUMX ( _both_periods, [_0 Quantity] )
+    VAR _price =
+        DIVIDE ( _sales, _quant )
+    VAR _cogs =
+        SUMX ( _both_periods, [_0 COGS] )
+    VAR _gp = _sales - _cogs
+    RETURN
+        SWITCH (
+            SELECTEDVALUE ( TableColumnLabel[SortOrder] ),
+            1, _quant,
+            2, _price,
+            3, _sales,
+            4, _cogs,
+            5, _gp,
+            BLANK ()
+        )
+
+MEASURE 'DAX'[dynamicMeasureprev] =
+    VAR _both_periods =
+        GetProductsWithSalesBothPeriods ()
+    VAR _sales =
+        SUMX ( _both_periods, [_1 Sales Prev year] )
+    VAR _quant =
+        SUMX ( _both_periods, [_1 quantity prev] )
+    VAR _price =
+        DIVIDE ( _sales, _quant )
+    VAR _cogs =
+        SUMX ( _both_periods, [_1 cogs prev] )
+    VAR _gp = _sales - _cogs
+    RETURN
+        SWITCH (
+            SELECTEDVALUE ( TableColumnLabel[SortOrder] ),
+            1, _quant,
+            2, _price,
+            3, _sales,
+            4, _cogs,
+            5, _gp,
+            BLANK ()
+        )
+
+MEASURE 'DAX'[Factor Amount] =
+    SWITCH (
+        SELECTEDVALUE ( ChartColumns[ColumnName] ),
+        "GP PM", [_1 Gross Profit Prev],
+        "Volume", [Volume Factor] + 0,
+        "MIX", [MIX Factor] + 0,
+        "Price", [Price Factor] + 0,
+        "COGS", [Cogs Factor] + 0,
+        "Delisted SKUs", [Old SKU Factor] + 0,
+        "New SKUs", [New SKU Factor] + 0,
+        "GP Act", [_0 Gross Profit]
+    )
+
+
+MEASURE 'DAX'[MIX Factor] =
+    VAR _both_periods =
+        GetProductsWithSalesBothPeriods ()
+    VAR _q_prev =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _m_prev =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_1 Gross Profit Prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _q =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _rate = _q / _q_prev
+    VAR _profit_per_item_prev = _m_prev / _q_prev
+    RETURN
+        SUMX (
+            _both_periods,
+            ( [_0 Quantity] - _rate * [_1 quantity prev] )
+                * (
+                    CALCULATE ( [_0 W Av Price], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+                        - CALCULATE ( [_0 W Av Cost], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) ) - _profit_per_item_prev
+                )
+        )
+
+MEASURE 'DAX'[New SKU Factor] =
+    VAR _cur_items =
+        CALCULATETABLE (
+            VALUES ( FactSales[ProductKey] ),
+            REMOVEFILTERS ( DimProduct[Product Name] )
+        )
+    VAR _prev_items =
+        CALCULATETABLE (
+            VALUES ( FactSales[ProductKey] ),
+            REMOVEFILTERS ( DimProduct[Product Name] ),
+            SAMEPERIODLASTYEAR ( 'Calendar'[Date] )
+        )
+    VAR _cur_period =
+        EXCEPT ( _cur_items, _prev_items )
+    VAR _mg_curr =
+        SUMX ( _cur_period, [_0 Gross Profit] )
+    RETURN
+        _mg_curr
+
+MEASURE 'DAX'[Old SKU Factor] =
+    VAR _cur_items =
+        CALCULATETABLE (
+            VALUES ( FactSales[ProductKey] ),
+            REMOVEFILTERS ( DimProduct[Product Name] )
+        )
+    VAR _prev_items =
+        CALCULATETABLE (
+            VALUES ( FactSales[ProductKey] ),
+            REMOVEFILTERS ( DimProduct[Product Name] ),
+            SAMEPERIODLASTYEAR ( 'Calendar'[Date] )
+        )
+    VAR _first_period =
+        EXCEPT ( _prev_items, _cur_items )
+    VAR _mg_prev =
+        SUMX ( _first_period, [_1 Gross Profit Prev] ) * -1
+    RETURN
+        _mg_prev
+
+MEASURE 'DAX'[Price Factor] =
+    VAR _both_periods =
+        GetProductsWithSalesBothPeriods ()
+    VAR _q_prev =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _q =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    RETURN
+        SUMX (
+            _both_periods,
+            [_0 Quantity]
+                * (
+                    [_0 W Av Price]
+                        - CALCULATE ( [_0 W Av Price], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+                )
+        )
+
+
+MEASURE 'DAX'[svg 1 categ] =
+    GetSvgForSelectedSlicer ( DimProduct[Category] )
+
+
+MEASURE 'DAX'[Volume Factor] =
+    VAR _both_periods =
+        GetProductsWithSalesBothPeriods ()
+    VAR _q_prev =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _m_prev =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_1 Gross Profit Prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _q =
+        SUMX (
+            _both_periods,
+            CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+        )
+    VAR _profit_per_item_prev = _m_prev / _q_prev
+    RETURN
+        SUMX (
+            _both_periods,
+            ( [_0 Quantity] - [_1 quantity prev] ) * _profit_per_item_prev
+        )
+---- MODEL MEASURES END ----
