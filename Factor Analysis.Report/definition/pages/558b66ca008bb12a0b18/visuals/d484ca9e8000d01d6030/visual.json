@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "d484ca9e8000d01d6030",
+  "position": {
+    "x": 1497.5,
+    "y": 8.6227544910179645,
+    "z": 14001,
+    "height": 998.07095920628012,
+    "width": 401.62038741990131,
+    "tabOrder": 8000
+  },
+  "visualGroup": {
+    "displayName": "Flter Pane",
+    "groupMode": "ScaleMode"
+  }
+}

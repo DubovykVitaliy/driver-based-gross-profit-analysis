@@ -1,0 +1,55 @@
+function GetProductsWithSalesBothPeriods = ```
+		() => 
+		VAR _cur_items =
+		    CALCULATETABLE (
+		        VALUES ( FactSales[ProductKey] ),
+		        REMOVEFILTERS ( DimProduct[Product Name] )
+		    )
+		VAR _prev_items =
+		    CALCULATETABLE (
+		        VALUES ( FactSales[ProductKey] ),
+		        REMOVEFILTERS ( DimProduct[Product Name] ),
+		        SAMEPERIODLASTYEAR ( 'Calendar'[Date] )
+		    )
+		VAR _both_periods =
+		    INTERSECT ( _cur_items, _prev_items )
+		RETURN _both_periods
+		```
+	lineageTag: c07423c8-c406-412a-9e50-25cc96385736
+
+function GetSvgForSelectedSlicer = ```
+		( targetColumn : COLUMNREF ) => 
+		var _line_pos = 500
+		var _max_bar = ROUND( MAX(MAXX(ALLSELECTED(targetColumn), [_0 Gross Profit]), MAXX(VALUES(targetColumn), 
+		[_1 Gross Profit Prev])), 0)
+		var _prev = ROUND( [_1 Gross Profit Prev], 0)
+		var _act = ROUND( [_0 Gross Profit], 0)
+		var _max_bar_local = ROUND(MAX(_prev, _act),0) + 30
+		var _delta_max = ROUND( max( MAXX(ALLSELECTED(targetColumn), [Delta Profit]), ABS(MINX(ALLSELECTED(targetColumn), [Delta Profit]))), 0)
+		var _delta = ROUND( [Delta Profit],0)
+		var _width1 = _prev / _max_bar * 250
+		var _width2 = _act / _max_bar * 250
+		var _width_del = ABS(_delta) / _delta_max * 100
+		var _pos1 = IF(_delta < 0, _line_pos - _width_del, _line_pos)
+		var _pos_text1 = _max_bar_local / _max_bar * 250 + 10
+		var _pos_text2 = IF(_delta >= 0, _line_pos - 100, _line_pos + 10)
+		var _color = IF(_delta<0, "#EA5656", "#58BE69")
+		
+		var _head = "data:image/svg+xml;utf8, "
+		var _svg = "<svg width='650' height='45' viewBox='0 0 650 45' fill='none' xmlns='http://www.w3.org/2000/svg'>
+		<rect width='" & _width1 &"' height='30' fill='#CACBE4'/>
+		<rect y='15' width='" & _width2 &"' height='30' fill='#686999'/>
+		<rect x='" & _pos1 &"' y='10' width='" & _width_del &"' height='25' fill='" & _color &"'/>
+		<line x1='" & _line_pos &"' y1='0' x2='" & _line_pos &"' y2='45' stroke='#888888' stroke-width='3' />
+		<text x='" & _pos_text1 &"' y='35' font-family='Arial' font-size='28' fill='#686999'>     " 
+		& FORMAT(ROUND(_act/1000000, 2), "# ##0.00M") &"
+		  </text>
+		<text x='" & _pos_text2 &"' y='30' font-family='Arial' font-size='28' fill='" & _color &"'>     " 
+		& FORMAT(ROUND(_delta/1000000, 2), "# ##0.00M")  &"
+		  </text>
+		</svg>"
+		
+		RETURN _head & _svg
+		```
+	lineageTag: cd5379ed-414c-4cc2-a682-ce7cec5a831f
+

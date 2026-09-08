@@ -1,0 +1,855 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Table filter open",
+  "name": "010e7223037478c04be5",
+  "options": {
+    "targetVisualNames": []
+  },
+  "explorationState": {
+    "version": "1.40",
+    "activeSection": "7e1c7410ea0c4896ba1e",
+    "filters": {
+      "byExpr": [
+        {
+          "name": "ac639abfd3a4af913203",
+          "type": "Advanced",
+          "filter": {
+            "Version": 2,
+            "From": [
+              {
+                "Name": "c",
+                "Entity": "Calendar",
+                "Type": 0
+              }
+            ],
+            "Where": [
+              {
+                "Condition": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "c"
+                          }
+                        },
+                        "Property": "year"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "2023L"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Calendar"
+                }
+              },
+              "Property": "year"
+            }
+          },
+          "howCreated": 1
+        }
+      ]
+    },
+    "sections": {
+      "7e1c7410ea0c4896ba1e": {
+        "visualContainers": {
+          "04214db8be42199ea061": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "0da80471417292b519eb": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "f08b2d292ea39eb8a07d",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Param Granularity level"
+                        }
+                      },
+                      "Property": "Granularity level"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "advancedSlicerVisual",
+              "objects": {
+                "merge": {
+                  "general": [
+                    {
+                      "properties": {
+                        "filter": {
+                          "filter": {
+                            "Version": 2,
+                            "From": [
+                              {
+                                "Name": "p",
+                                "Entity": "Param Granularity level",
+                                "Type": 0
+                              }
+                            ],
+                            "Where": [
+                              {
+                                "Condition": {
+                                  "In": {
+                                    "Expressions": [
+                                      {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Source": "p"
+                                            }
+                                          },
+                                          "Property": "Parameter Fields"
+                                        }
+                                      }
+                                    ],
+                                    "Values": [
+                                      [
+                                        {
+                                          "Literal": {
+                                            "Value": "'''DimProduct''[Category]'"
+                                          }
+                                        }
+                                      ]
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "selection": [
+                    {
+                      "properties": {
+                        "strictSingleSelect": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "true"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "cachedFilterDisplayItems": [
+                {
+                  "id": {
+                    "scopeId": {
+                      "Comparison": {
+                        "ComparisonKind": 0,
+                        "Left": {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Entity": "Param Granularity level"
+                              }
+                            },
+                            "Property": "Parameter Fields"
+                          }
+                        },
+                        "Right": {
+                          "Literal": {
+                            "Value": "'''DimProduct''[Category]'"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "displayName": "Category"
+                }
+              ]
+            }
+          },
+          "19f3a6cc0c1431f33cd7": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "258f65b08a2b20dd3963": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "3c47787b408c5123a811": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "345bf1eddccb0139a8de",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Brand"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Brand"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "5c61b4bc6ba2ba96f232": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "8e9f2abab018000002b8",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "TableColumnLabel"
+                        }
+                      },
+                      "Property": "MetricName"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "0bb92c30b419ca3138a7",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "TableRowLabel"
+                        }
+                      },
+                      "Property": "MetricName"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "6488707d8bb980b3e52b",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAX"
+                        }
+                      },
+                      "Property": "DynamicMeasure"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "917a4e0ca3e6aa789821",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAX"
+                        }
+                      },
+                      "Property": "dynamicMeasureprev"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "0373a2653b20c5c47314",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Category"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "pivotTable",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Category"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Columns": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "TableColumnLabel"
+                        }
+                      },
+                      "Property": "MetricName"
+                    }
+                  }
+                ],
+                "Rows": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Category"
+                    }
+                  },
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "TableRowLabel"
+                        }
+                      },
+                      "Property": "MetricName"
+                    }
+                  }
+                ]
+              },
+              "projections": {
+                "Columns": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "TableColumnLabel"
+                        }
+                      },
+                      "Property": "MetricName"
+                    }
+                  }
+                ],
+                "Rows": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Category"
+                    }
+                  },
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "TableRowLabel"
+                        }
+                      },
+                      "Property": "MetricName"
+                    }
+                  }
+                ],
+                "Values": [
+                  {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAX"
+                        }
+                      },
+                      "Property": "DynamicMeasure"
+                    }
+                  },
+                  {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAX"
+                        }
+                      },
+                      "Property": "dynamicMeasureprev"
+                    }
+                  },
+                  {
+                    "NativeVisualCalculation": {
+                      "Language": "dax",
+                      "Expression": "\r\nvar _act = [DynamicMeasure]\r\nvar _prev = [dynamicMeasureprev]\r\nvar _dif = _act - _prev\r\nvar _pct = DIVIDE(_act - _prev, _prev)\r\n\r\nvar _metric_level = \r\nSWITCH([Metric],\r\n\r\n\"Δ UAH\", _dif,\r\n\"Δ %\", _pct)\r\n\r\nRETURN  \r\n// _metric_level\r\nSWITCH( TRUE(),\r\nISATLEVEL([Metric]), _metric_level \r\n)",
+                      "Name": "Calc Value"
+                    }
+                  },
+                  {
+                    "NativeVisualCalculation": {
+                      "Language": "dax",
+                      "Expression": "\r\nvar _act = [DynamicMeasure]\r\nvar _prev = [dynamicMeasureprev]\r\nvar _dif = _act - _prev\r\nvar _pct = DIVIDE(_act - _prev, _prev)\r\n\r\nvar _act_form = IF([MetricName1] = \"Price (UAH)\",FORMAT(_act, \"0.00\"),  FORMAT(_act / 1000, \"# ##0.0\"))\r\nvar _prev_form = IF([MetricName1] = \"Price (UAH)\",FORMAT(_prev, \"0.00\"),  FORMAT(_prev / 1000, \"# ##0.0\"))\r\nvar _dif_form = IF([MetricName1] = \"Price (UAH)\",FORMAT(_dif, \"0.00\"),  FORMAT(_dif / 1000, \"# ##0.0\"))\r\n\r\nvar _metric_level = \r\nSWITCH([Metric],\r\n\"Actual\",  _act_form,\r\n\"PY\", _prev_form,\r\n\"Δ UAH\", _dif_form,\r\n\"Δ %\", FORMAT(_pct, \"0.0%\"))\r\n\r\nRETURN  \r\n// _metric_level\r\nSWITCH( TRUE(),\r\nISATLEVEL([Metric]), _metric_level,\r\nNOT ISATLEVEL([Metric]) && [MetricName1] = \"Price (UAH)\" \r\n    , NEXT([DynamicMeasure],1,COLUMNS) /  PREVIOUS([DynamicMeasure],1,COLUMNS,) ,\r\n FORMAT(_act / 1000, \"# ##0.0\"))",
+                      "Name": "Show Value"
+                    }
+                  },
+                  {
+                    "NativeVisualCalculation": {
+                      "Language": "dax",
+                      "Expression": "\r\nvar _metric_color = \r\nSWITCH(TRUE(),\r\n[Metric] = \"Δ UAH\" && [Calc Value] > 0, \"#EA5656\",\r\n[Metric] = \"Δ UAH\" && [Calc Value] < 0, \"#58BE69\",\r\n[Metric] = \"Δ %\" && [Calc Value] > 0, \"#EA5656\",\r\n[Metric] = \"Δ %\" && [Calc Value] < 0, \"#58BE69\",\r\n\"#333333\"\r\n)\r\nRETURN _metric_color",
+                      "Name": "Color Value"
+                    }
+                  }
+                ]
+              },
+              "parameters": {
+                "Rows": [
+                  {
+                    "expr": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Param Granularity level"
+                          }
+                        },
+                        "Property": "Granularity level"
+                      }
+                    },
+                    "index": 0,
+                    "length": 1,
+                    "sortDirection": 1
+                  }
+                ]
+              }
+            }
+          },
+          "79445d46484dcd6a8781": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "4fadc929c03a1c0ce2c1",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Category"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Category"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "8be54f5f9f950248dc6b": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "989037ce03c0b3233399": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "a49aa48b2e05bd47bf02": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "5ca1b9a68ea30b8bea02",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimStore"
+                        }
+                      },
+                      "Property": "CountryName"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "selection": [
+                    {
+                      "properties": {
+                        "strictSingleSelect": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "false"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimStore"
+                        }
+                      },
+                      "Property": "CountryName"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "c685de539254eb259007": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "cd68e486593f97f2fb6b": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "c2e7ca30ca63ce48e76c",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimStore"
+                        }
+                      },
+                      "Property": "State"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimStore"
+                        }
+                      },
+                      "Property": "State"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "e54a0b4fbffa76b70c44": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "8f40ecb6b341ed6070cd",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Calendar"
+                        }
+                      },
+                      "Property": "Month"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "selection": [
+                    {
+                      "properties": {
+                        "strictSingleSelect": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "false"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Calendar"
+                        }
+                      },
+                      "Property": "Month"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "e7c126036d1f7c62b082": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "eed98f6a381a36d6a399": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "ad87f2dd0c3d210d8508",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Subcategory"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProduct"
+                        }
+                      },
+                      "Property": "Subcategory"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "481055ac08209628c80e": {
+            "singleVisual": {
+              "visualType": "image",
+              "objects": {}
+            }
+          },
+          "c0517c454b0ac491860e": {
+            "singleVisual": {
+              "visualType": "image",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          }
+        },
+        "visualContainerGroups": {
+          "776cf7d5f835e363fdb6": {
+            "isHidden": false
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

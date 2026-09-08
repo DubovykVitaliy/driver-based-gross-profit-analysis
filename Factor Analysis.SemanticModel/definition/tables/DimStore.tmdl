@@ -1,0 +1,85 @@
+table DimStore
+	lineageTag: bdbbcffd-0292-4368-b8ff-4f6a76ee9044
+
+	column StoreKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a902b8a-9615-4014-957f-0a1e149fea4f
+		summarizeBy: none
+		sourceColumn: StoreKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column GeoAreaKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 9749cf8e-1f3e-4887-aba7-cfb34930f616
+		summarizeBy: none
+		sourceColumn: GeoAreaKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryCode
+		dataType: string
+		lineageTag: 117e6996-e614-4acc-9ea1-52dc53665f56
+		summarizeBy: none
+		sourceColumn: CountryCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryName
+		dataType: string
+		lineageTag: 0e268e15-efe7-44ad-9dad-e8a772ce2010
+		summarizeBy: none
+		sourceColumn: CountryName
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 3f58017d-c685-43ef-a909-4e05ed5f16f5
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: f75820e5-322b-4653-be6f-7f5b1fdefe81
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column SquareMeters
+		dataType: int64
+		formatString: 0
+		lineageTag: 76c86e7a-cd3d-4cc7-84a6-35ced0f574fe
+		summarizeBy: none
+		sourceColumn: SquareMeters
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 491ad56a-ec38-4f19-b3f6-7869e67910f2
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimStore = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost\SQLEXPRESS", "Contoso V2 1M"),
+				    Data_Store = Source{[Schema="Data",Item="Store"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(Data_Store,{"StoreKey", "GeoAreaKey", "CountryCode", "CountryName", "State", "Description", "SquareMeters", "Status"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([Status] <> "Closed"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

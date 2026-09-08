@@ -1,0 +1,25 @@
+table ChartColumns
+	lineageTag: 450f0e6d-c1f5-41bd-bbd8-b0462606c01a
+
+	column ColumnName
+		lineageTag: d1ffb7d1-af19-4dac-8256-6a9512f15791
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		formatString: 0
+		lineageTag: c9de3499-c5db-496f-94ca-b3fdd14f5df3
+		summarizeBy: sum
+		sourceColumn: [Value2]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ChartColumns = calculated
+		mode: import
+		source = {("GP PM", 0), ("Volume",1),("MIX",2), ("Price",3), ("COGS",4),("Delisted SKUs", 5),("New SKUs", 6),  ("GP Act",7), ("Change", 8)}
+
+	annotation PBI_Id = b6f801e217d84b7e9c624d59a452a670
+

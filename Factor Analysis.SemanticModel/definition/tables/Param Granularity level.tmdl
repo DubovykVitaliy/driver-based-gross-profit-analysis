@@ -1,0 +1,49 @@
+table 'Param Granularity level'
+	lineageTag: 315fc62c-f0a7-4749-bb00-1dcdb576d9ae
+
+	column 'Granularity level'
+		lineageTag: 437950a1-6880-4212-8a7a-c404dd1d59a1
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Fields'
+		isHidden
+		lineageTag: 2c9264c6-94b1-4e88-9af5-634264a62e73
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Order'
+		isHidden
+		formatString: 0
+		lineageTag: d9a45fda-345a-431e-a8a8-fc4846780fdb
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Param Granularity level' = calculated
+		mode: import
+		source =
+				{
+				    ("Category", NAMEOF('DimProduct'[Category]), 0),
+				    ("Subcategory", NAMEOF('DimProduct'[Subcategory]), 1),
+				    ("Product", NAMEOF('DimProduct'[Product Name]), 2)
+				}
+
+	annotation PBI_Id = b7b89100b3784ed890f7959740f50fa8
+

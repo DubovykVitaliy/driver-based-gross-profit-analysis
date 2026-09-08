@@ -1,0 +1,99 @@
+table FactSales
+	lineageTag: 4adc044f-972f-4fbb-af38-e91e69480442
+
+	column UnitPrice
+		dataType: decimal
+		formatString: #,0.###############\ "₴";-#,0.###############\ "₴";#,0.###############\ "₴"
+		lineageTag: abc9785b-66e0-4ffa-9a50-a0c7aa62576b
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	column OrderDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2f8614af-b159-4162-81de-c8c30677cd7e
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column OrderKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 0de49b38-1ff4-4d70-8e34-b9ebdc223c4d
+		summarizeBy: count
+		sourceColumn: OrderKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column StoreKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 61485758-3807-45bf-837a-8c62f9d61c1f
+		summarizeBy: none
+		sourceColumn: StoreKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 00a6f3e8-931b-4ae4-bdec-f06deb29a000
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: c1e6ab61-cd95-49c2-829d-41bc4188df94
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitCost
+		dataType: decimal
+		formatString: #,0.###############\ "₴";-#,0.###############\ "₴";#,0.###############\ "₴"
+		lineageTag: 7209c126-f3f8-46e6-a438-839d1b6f3c50
+		summarizeBy: sum
+		sourceColumn: UnitCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	column NetPrice
+		dataType: decimal
+		formatString: #,0.###############\ "₴";-#,0.###############\ "₴";#,0.###############\ "₴"
+		lineageTag: 272a025d-22ab-4559-9731-a74a46a9ae7e
+		summarizeBy: sum
+		sourceColumn: NetPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	partition FactSales = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost\SQLEXPRESS", "Contoso V2 1M"),
+				    Data_Sales = Source{[Schema="Data",Item="Sales"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(Data_Sales, each [OrderDate] >= #date(2022, 1, 1) and [OrderDate] <= #date(2023, 12, 31)),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"OrderKey", "OrderDate", "StoreKey", "ProductKey", "Quantity", "UnitPrice", "NetPrice", "UnitCost"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"UnitPrice", Currency.Type}, {"NetPrice", Currency.Type}, {"UnitCost", Currency.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

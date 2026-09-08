@@ -1,0 +1,23 @@
+table Colors
+	lineageTag: cf612b02-c29f-45ab-9d14-bece7bcdd2d2
+
+	column hex
+		lineageTag: 5724455e-b72f-4da0-b284-f54fabdf590b
+		summarizeBy: none
+		sourceColumn: [Value1]
+
+		annotation SummarizationSetBy = Automatic
+
+	column type
+		lineageTag: ad2fc734-0bfc-453e-9f2b-566a8a0f62f2
+		summarizeBy: none
+		sourceColumn: [Value2]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Colors = calculated
+		mode: import
+		source = {("#686999", "Actual"), ("#CACBE4", "Prev"), ("#EA5656", "Neg"), ("#58BE69", "Pos"), ("#999999", "dull line"), ("#4894D1", "Buttons")}
+
+	annotation PBI_Id = 46be8f4f730847878debd033186cd296
+

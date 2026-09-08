@@ -1,0 +1,84 @@
+table DimProduct
+	lineageTag: 8cd12281-5cc8-4d3f-a2e3-7306624adfda
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: babc310e-65f3-49f0-a92c-9e5be113375b
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Name'
+		dataType: string
+		lineageTag: 91022bc8-1062-4995-b4eb-9b5f1b0b4463
+		summarizeBy: none
+		sourceColumn: Product Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: 62dd721d-d7a7-491c-8cd1-887cd6b74061
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color
+		dataType: string
+		lineageTag: 08f1eef6-74aa-49ba-ad62-932c9f688647
+		summarizeBy: none
+		sourceColumn: Color
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Subcategory Code'
+		dataType: int64
+		formatString: 0
+		lineageTag: fff18bf9-b3b6-4ae3-88ac-86af662e8059
+		summarizeBy: none
+		sourceColumn: Subcategory Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategory
+		dataType: string
+		lineageTag: a28287f9-d092-4cc7-b2ef-1cf34169ad79
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Category Code'
+		dataType: int64
+		formatString: 0
+		lineageTag: e010a631-0a82-4506-8889-633cce7b2fca
+		summarizeBy: none
+		sourceColumn: Category Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 534e2c44-f74a-45dd-8429-18895bcbfea5
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProduct = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost\SQLEXPRESS", "Contoso V2 1M"),
+				    dbo_Product = Source{[Schema="dbo",Item="Product"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(dbo_Product,{"ProductKey", "Product Name", "Brand", "Color", "Subcategory Code", "Subcategory", "Category Code", "Category"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

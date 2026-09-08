@@ -1,0 +1,12 @@
+relationship AutoDetected_d4295c97-dca8-4531-a0a2-a775940a90f1
+	fromColumn: FactSales.StoreKey
+	toColumn: DimStore.StoreKey
+
+relationship AutoDetected_e40fc4a3-77a6-44a7-be3f-2d54883cbe35
+	fromColumn: FactSales.ProductKey
+	toColumn: DimProduct.ProductKey
+
+relationship ef7c0755-07fa-43d5-ba30-695a795b9b4b
+	fromColumn: FactSales.OrderDate
+	toColumn: Calendar.Date
+

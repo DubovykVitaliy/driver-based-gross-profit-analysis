@@ -1,0 +1,37 @@
+table TableRowLabel
+	lineageTag: 27f23375-3cb7-479e-b9a2-a7736cd8f259
+
+	column MetricName
+		lineageTag: 22db00fe-3603-490d-87a6-28e821f5a046
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MetricName]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		formatString: 0
+		lineageTag: ebd74160-e696-42e9-bbfd-ddc0453dc9a2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [SortOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TableRowLabel = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "MetricName", STRING,
+				    "SortOrder", INTEGER,
+				    {   {" ", 0},
+				        {"Actual", 1},
+				        {"PY", 2},
+				        {"Δ UAH", 3},
+				        {"Δ %", 4}
+				    }
+				)
+
+	annotation PBI_Id = e4c034109f804277b11c76956f5b9814
+

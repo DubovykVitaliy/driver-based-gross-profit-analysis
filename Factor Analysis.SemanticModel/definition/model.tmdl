@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: uk-UA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["FactSales","DimStore","DimProduct"]
+
+annotation __TEdtr = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DAX
+ref table FactSales
+ref table DimStore
+ref table DimProduct
+ref table Calendar
+ref table ChartColumns
+ref table Colors
+ref table TableRowLabel
+ref table TableColumnLabel
+ref table 'Param Granularity level'
+
+ref cultureInfo en-US
+

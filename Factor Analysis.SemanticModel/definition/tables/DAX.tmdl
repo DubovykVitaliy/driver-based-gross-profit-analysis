@@ -1,0 +1,669 @@
+table DAX
+	lineageTag: 1396cf8c-230a-4553-be86-993f319c458f
+
+	measure '_0 Sales' = SUMX(FactSales, FactSales[NetPrice] * FactSales[Quantity])
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base measures
+		lineageTag: e0d5f459-d7f1-45fe-b112-b41033f57c0a
+
+	measure '_0 Quantity' = SUM(FactSales[Quantity])
+		formatString: 0
+		displayFolder: Base measures
+		lineageTag: ff37b870-de7b-4dd7-92ea-ef43601ad923
+
+	measure '_1 Sales Prev year' = CALCULATE([_0 Sales], SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base Prev Period
+		lineageTag: f9fcdfc3-c8a8-487e-939e-47ed595d29da
+
+	measure '_0 W Av Price' =
+			
+			DIVIDE(
+			    SUMX(FactSales, FactSales[Quantity] * FactSales[NetPrice]),
+			    SUM(FactSales[Quantity])
+			)
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base measures
+		lineageTag: c1601452-7c0c-4ac9-a149-e2d0ea90d59f
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Factor Amount' =
+			
+			SWITCH(SELECTEDVALUE(ChartColumns[ColumnName]),
+			"GP PM", [_1 Gross Profit Prev],
+			"Volume", [Volume Factor] + 0,
+			"MIX", [MIX Factor] + 0,
+			"Price",[Price Factor] + 0,
+			"COGS", [Cogs Factor] + 0,
+			"Delisted SKUs", [Old SKU Factor] + 0,
+			"New SKUs", [New SKU Factor] + 0,
+			"GP Act", [_0 Gross Profit]
+			)
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		lineageTag: 86189ccd-237b-4231-ba88-80a627bd5f24
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure '_0 COGS' = SUMX(FactSales, FactSales[UnitCost] * FactSales[Quantity])
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base measures
+		lineageTag: cf3b8665-4b67-4769-b2eb-203df23ac9cc
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure '_0 W Av Cost' =
+			
+			DIVIDE(
+			    SUMX(FactSales, FactSales[Quantity] * FactSales[UnitCost]),
+			    SUM(FactSales[Quantity])
+			)
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base measures
+		lineageTag: d2ab388f-ce40-4c9b-a3fc-462850c2b2f8
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure '_1 Gross Profit Prev' =
+			
+			var _sales = CALCULATE([_0 Sales], SAMEPERIODLASTYEAR('Calendar'[Date]))
+			var _cogs = CALCULATE([_0 COGS], SAMEPERIODLASTYEAR('Calendar'[Date]))
+			
+			RETURN _sales - _cogs
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base Prev Period
+		lineageTag: 5111fba1-7aef-4b47-9c25-a2c05dcda2e5
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure '_0 Gross Profit' = [_0 Sales] - [_0 COGS]
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base measures
+		lineageTag: 6a1db4b9-ff0b-48d1-9c51-a4e7527bd8ba
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'Delta Profit' = ```
+			[_0 Gross Profit] -[_1 Gross Profit Prev] 
+			```
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		lineageTag: f3b88669-449f-4ae6-bbfd-bf15e4e886f9
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure '_1 quantity prev' = CALCULATE([_0 Quantity], SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: 0
+		displayFolder: Base Prev Period
+		lineageTag: b042d6c7-4406-4c9f-b069-421144304bb4
+
+	measure 'MIX Factor' = ```
+			
+			VAR _both_periods = GetProductsWithSalesBothPeriods()
+			VAR _q_prev =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _m_prev =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_1 Gross Profit Prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _q =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _rate = _q / _q_prev
+			VAR _profit_per_item_prev = _m_prev / _q_prev 
+			
+			RETURN
+			    SUMX (
+			        _both_periods,
+			        ( [_0 Quantity] - _rate * [_1 quantity prev] )
+			            * (
+			                CALCULATE ( [_0 W Av Price], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+			                    - CALCULATE ( [_0 W Av Cost], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) ) - _profit_per_item_prev
+			            )
+			    )
+			```
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Factors
+		lineageTag: 1b48c63d-eff0-4262-998c-6f83d1aa0d0e
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure '_1 cogs prev' = CALCULATE([_0 COGS], SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base Prev Period
+		lineageTag: 87c36917-29d8-41a3-9374-330af50ea84d
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'Volume Factor' =
+			
+			VAR _both_periods = GetProductsWithSalesBothPeriods()
+			VAR _q_prev =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _m_prev =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_1 Gross Profit Prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _q =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _profit_per_item_prev = _m_prev / _q_prev
+			RETURN
+			    SUMX (
+			        _both_periods,
+			        ( [_0 Quantity] - [_1 quantity prev] ) * _profit_per_item_prev
+			    )
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Factors
+		lineageTag: 551e63ce-8cf5-477c-85a9-7509fb020f75
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'Price Factor' =
+			
+			VAR _both_periods =  GetProductsWithSalesBothPeriods()
+			VAR _q_prev =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _q =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			RETURN
+			    SUMX (
+			        _both_periods,
+			        [_0 Quantity]
+			            * (
+			                [_0 W Av Price]
+			                    - CALCULATE ( [_0 W Av Price], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+			            )
+			    )
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Factors
+		lineageTag: b94a41b5-8df9-4d88-a291-b2b0cfe3e49d
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure '_1 W Av Price prev' = CALCULATE([_0 W Av Price], SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Base Prev Period
+		lineageTag: bb37eb98-2602-4e8e-a5ac-92ba1f31847e
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'Cogs Factor' =
+			
+			VAR _both_periods = GetProductsWithSalesBothPeriods()
+			VAR _q_prev =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_1 quantity prev], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			VAR _q =
+			    SUMX (
+			        _both_periods,
+			        CALCULATE ( [_0 Quantity], REMOVEFILTERS ( DimProduct[Product Name] ) )
+			    )
+			RETURN
+			    SUMX (
+			        _both_periods,
+			        [_0 Quantity]
+			            * (
+			                [_0 W Av Cost]
+			                    - CALCULATE ( [_0 W Av Cost], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+			            )
+			    ) * -1
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Factors
+		lineageTag: d75e3eea-a359-4246-be7c-db32bc8d55d8
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'Old SKU Factor' =
+			
+			VAR _cur_items =
+			    CALCULATETABLE (
+			        VALUES ( FactSales[ProductKey] ),
+			        REMOVEFILTERS ( DimProduct[Product Name] )
+			    )
+			VAR _prev_items =
+			    CALCULATETABLE (
+			        VALUES ( FactSales[ProductKey] ),
+			        REMOVEFILTERS ( DimProduct[Product Name] ),
+			        SAMEPERIODLASTYEAR ( 'Calendar'[Date] )
+			    )
+			VAR _first_period =
+			    EXCEPT ( _prev_items, _cur_items )
+			VAR _mg_prev =
+			    SUMX ( _first_period, [_1 Gross Profit Prev] ) * -1
+			RETURN
+			    _mg_prev
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Factors
+		lineageTag: 9abc712c-41f9-42e0-bda2-9ce1f61b28e2
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'New SKU Factor' =
+			
+			VAR _cur_items =
+			    CALCULATETABLE (
+			        VALUES ( FactSales[ProductKey] ),
+			        REMOVEFILTERS ( DimProduct[Product Name] )
+			    )
+			VAR _prev_items =
+			    CALCULATETABLE (
+			        VALUES ( FactSales[ProductKey] ),
+			        REMOVEFILTERS ( DimProduct[Product Name] ),
+			        SAMEPERIODLASTYEAR ( 'Calendar'[Date] )
+			    )
+			VAR _cur_period =
+			    EXCEPT ( _cur_items, _prev_items )
+			VAR _mg_curr =
+			    SUMX ( _cur_period, [_0 Gross Profit] )
+			RETURN
+			    _mg_curr
+		formatString: #,0.00\ "₴";-#,0.00\ "₴";#,0.00\ "₴"
+		displayFolder: Factors
+		lineageTag: 261dbf01-6fef-48d4-93d8-51535031ba13
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'svg 1 categ' = GetSvgForSelectedSlicer(DimProduct[Category])
+		lineageTag: 47c9c4b4-c898-4f51-8e53-2cccf67cc08a
+
+	measure 'label sales' =
+			
+			VAR _prev = [_1 Sales Prev year]
+			
+			var _result = IF(_prev < 1000000, FORMAT(DIVIDE(_prev, 1000), "# ###.0K"  ),  FORMAT(DIVIDE(_prev, 1000000), "# ###.0M"  ))
+			
+			RETURN "PY: " &  _result & " "
+		displayFolder: Labels Cards\labels
+		lineageTag: 55ea3ad7-74d7-4ec6-806d-fbffd550b7cb
+
+	measure 'label ref sales' =
+			
+			var _act = [_0 Sales]
+			var _prev = [_1 Sales Prev year]
+			VAR _diff = _act - _prev
+			VAR _diff_pct = DIVIDE( _act, _prev) - 1
+			
+			var _result1 = SWITCH(TRUE()
+			  , ABS(_diff) < 1000, FORMAT(_diff, "+# ###.0;-#,##0.0;0.0"  )
+			  , ABS(_diff) < 1000000, FORMAT(DIVIDE(_diff, 1000), "+# ###.0K;-#,##0.0K"  )
+			  , FORMAT(DIVIDE(_diff, 1000000), "+# ###.0M;-#,##0.0M"  ) )
+			var _result2 =  FORMAT(_diff_pct, "0.0%"  )
+			
+			RETURN  _result1  & " | " & _result2 & IF(_diff < 0, " ▼", " ▲")
+		displayFolder: Labels Cards\refs
+		lineageTag: 2f820f1e-e6b7-486f-99d9-8e4f8143171d
+
+	measure 'label ref quant' =
+			
+			var _act = [_0 Quantity]
+			var _prev = [_1 quantity prev]
+			VAR _diff = _act - _prev
+			VAR _diff_pct = DIVIDE( _act, _prev) - 1
+			
+			var _result1 = SWITCH(TRUE()
+			  , ABS(_diff) < 1000, FORMAT(_diff, "+# ###;-# ###"  )
+			  , FORMAT(DIVIDE(_diff, 1000), "+# ###.0K;-# ###.0K"  )
+			   )
+			var _result2 =  FORMAT(_diff_pct, "0.0%"  )
+			
+			RETURN _result1  & " | " & _result2 & IF(_diff < 0, " ▼", " ▲")
+		displayFolder: Labels Cards\refs
+		lineageTag: ac4597b0-7f12-4952-9da8-29dc42e070a0
+
+	measure 'Label ref GP' =
+			
+			var _act = [_0 Gross Profit]
+			var _prev = [_1 Gross Profit Prev]
+			VAR _diff = _act - _prev
+			VAR _diff_pct = DIVIDE( _act, _prev) - 1
+			
+			var _result1 = SWITCH(TRUE()
+			  , ABS(_diff) < 1000, FORMAT(_diff, "+# ###.0;-#,##0.0;0.0"  )
+			  , ABS(_diff) < 1000000, FORMAT(DIVIDE(_diff, 1000), "+# ###.0K;-#,##0.0K"  )
+			  , FORMAT(DIVIDE(_diff, 1000000), "+# ###.0M;-#,##0.0M"  ) )
+			var _result2 =  FORMAT(_diff_pct, "0.0%"  )
+			
+			RETURN _result1  & " | " & _result2 & IF(_diff < 0, " ▼", " ▲")
+		displayFolder: Labels Cards\refs
+		lineageTag: 30c6c1b1-c22c-4500-9adf-c7ee64a63d3f
+
+	measure 'label ref COGS' =
+			
+			var _act = [_0 COGS]
+			var _prev = [_1 cogs prev]
+			VAR _diff = _act - _prev
+			VAR _diff_pct = DIVIDE( _act, _prev) - 1
+			
+			var _result1 = SWITCH(TRUE()
+			  , ABS(_diff) < 1000, FORMAT(_diff, "+# ###.0;-#,##0.0;0.0"  )
+			  , ABS(_diff) < 1000000, FORMAT(DIVIDE(_diff, 1000), "+# ###.0K;-#,##0.0K"  )
+			  , FORMAT(DIVIDE(_diff, 1000000), "+# ###.0M;-#,##0.0M"  ) )
+			var _result2 =  FORMAT(_diff_pct, "0.0%"  )
+			
+			RETURN _result1  & " | " & _result2 & IF(_diff < 0, " ▼", " ▲")
+		displayFolder: Labels Cards\refs
+		lineageTag: b7e91506-82e3-44ef-bd53-86105eb06b68
+
+	measure 'label quantity' =
+			
+			VAR _prev = [_1 quantity prev]
+			
+			var _result = "PY: " & FORMAT(DIVIDE(_prev, 1000), "# ###.0K"  )
+			
+			RETURN _result
+		displayFolder: Labels Cards\labels
+		lineageTag: f3d38df8-0685-4017-90b2-c7b74dbcd9ea
+
+	measure 'label COGS' =
+			
+			VAR _prev = [_1 cogs prev]
+			
+			var _result = IF(_prev < 1000000, FORMAT(DIVIDE(_prev, 1000), "# ###.0K"  ),  FORMAT(DIVIDE(_prev, 1000000), "# ###.0M"  ))
+			
+			RETURN "PY: " &  _result
+		displayFolder: Labels Cards\labels
+		lineageTag: 6b93248d-630d-48a1-89ec-010cd905ca26
+
+	measure 'label GP' =
+			
+			VAR _prev = [_1 Gross Profit Prev]
+			
+			var _result = IF(_prev < 1000000, FORMAT(DIVIDE(_prev, 1000), "# ###.0K"  ),  FORMAT(DIVIDE(_prev, 1000000), "# ###.0M"  ))
+			
+			RETURN "PY: " &  _result
+		displayFolder: Labels Cards\labels
+		lineageTag: 49db57d5-6b7e-4259-a09e-56eaab0e9cd3
+
+	measure 'color label COGS' = ```
+			
+			VAR _prev = [_0 COGS] -  [_1 cogs prev] 
+			
+			RETURN IF(_prev<0, LOOKUPVALUE(Colors[hex], Colors[type], "Neg"), LOOKUPVALUE(Colors[hex], Colors[type], "Pos"))
+			```
+		displayFolder: Labels Cards\Colors
+		lineageTag: 5c33980e-1abe-4fea-97a3-95af674f6598
+
+	measure 'color label quant' = ```
+			
+			VAR _prev = [_0 Quantity] -  [_1 quantity prev] 
+			
+			RETURN IF(_prev<0, LOOKUPVALUE(Colors[hex], Colors[type], "Neg"), LOOKUPVALUE(Colors[hex], Colors[type], "Pos"))
+			```
+		displayFolder: Labels Cards\Colors
+		lineageTag: dd04c5a2-44da-4b2d-8765-b1903659a5f8
+
+	measure 'color label sales' =
+			
+			VAR _prev = [_0 Sales] -  [_1 Sales Prev year]
+			
+			RETURN IF(_prev<0, LOOKUPVALUE(Colors[hex], Colors[type], "Neg"), LOOKUPVALUE(Colors[hex], Colors[type], "Pos"))
+		displayFolder: Labels Cards\Colors
+		lineageTag: dfafba93-289c-4e43-9581-0bbd092dde5a
+
+	measure 'color label GP' =
+			
+			VAR _prev = [_0 Gross Profit] -  [_1 Gross Profit Prev]
+			
+			RETURN IF(_prev<0, LOOKUPVALUE(Colors[hex], Colors[type], "Neg"), LOOKUPVALUE(Colors[hex], Colors[type], "Pos"))
+		displayFolder: Labels Cards\Colors
+		lineageTag: d2ba6cbe-a268-4329-9cda-e0409bc0df22
+
+	measure 'Quantity Sold' =
+			
+			"Placeholder"
+		displayFolder: Labels Cards\Titles
+		lineageTag: 1a30e03e-d279-4b90-af08-ae3ba6b6e4c5
+
+	measure Revenue =
+			
+			"Placeholder"
+		displayFolder: Labels Cards\Titles
+		lineageTag: ec682556-91ae-4d39-9193-b014eff0c070
+
+	measure COGS =
+			
+			"Placeholder"
+		displayFolder: Labels Cards\Titles
+		lineageTag: 3946e910-6d96-4de4-9ff5-ba2ffe9f6116
+
+	measure Subtitle =
+			
+			var _sel = SELECTEDVALUE('Calendar'[Month], "all")
+			VAR _date = MAX('Calendar'[Date])
+			VAR _act = FORMAT(_date, "mmm'yy")
+			VAR _prev = FORMAT(EDATE(_date, -12), "mmm'yy")
+			VAR _act_all = FORMAT(_date, "yyyy")
+			VAR _prev_all = FORMAT(EDATE(_date, -12), "yyyy")
+			
+			RETURN IF(_sel = "all",  "Per Period: " & _act_all & " vs " & _prev_all, "Per Period: " & _act & " vs " & _prev)
+		displayFolder: Text titlles
+		lineageTag: 274f5a93-2a92-4d29-a3b5-60892384ef9e
+
+	measure 'Gross Profit' =
+			
+			"Placeholder"
+		displayFolder: Labels Cards\Titles
+		lineageTag: 19baf98d-c523-4e63-976b-62a951cd3465
+
+	measure 'tooltip Header' =
+			
+			VAR _m = FORMAT(MAX('Calendar'[Date]), "mmm")
+			VAR _y = YEAR(MAX('Calendar'[Date]))
+			VAR _y_p = YEAR(MAX('Calendar'[Date])) - 1
+			VAR _gp = [_0 Gross Profit]
+			VAR _gp_p = [_1 Gross Profit Prev]
+			var _vari = _gp - _gp_p
+			var _up_down = IF(_vari <0, "decreased ", IF(_vari>0, "increased ", "didn't change"))
+			var _result = IF(_gp_p < 1000000, FORMAT(DIVIDE(_gp_p, 1000), "# ###.0K"  ),  FORMAT(DIVIDE(_gp_p, 1000000), "# ###.0M"  ))
+			var _result_act = IF(_gp < 1000000, FORMAT(DIVIDE(_gp, 1000), "# ###.0K"  ),  FORMAT(DIVIDE(_gp, 1000000), "# ###.0M"  ))
+			RETURN " from "& _result & " in " & _m & " " & _y_p & " to " & _result_act & " in " & _m & " " & _y
+		displayFolder: Tooltip Waterfall
+		lineageTag: 02eb2201-3ef3-4a3e-9242-203062018f8c
+
+	measure 'tooltip body' =
+			
+			var _sel = SELECTEDVALUE(ChartColumns[ColumnName])
+			var _am  = [Factor Amount]
+			var _am_form = IF(ABS(_am) < 1000000, FORMAT(DIVIDE(ABS(_am), 1000), "# ###.0K"  ),  FORMAT(DIVIDE(ABS(_am), 1000000), "# ###.0M"  ))
+			var _updown = IF(_am < 0, "reduced " , IF(_am > 0, "increased " , "didn't affect"))
+			var _updown_num = IF(_am <> 0, " by " & _am_form )
+			var _vol =  _updown_num
+			RETURN  IF(_sel = "GP Act" || _sel = "GP PM", BLANK(), _vol)
+		displayFolder: Tooltip Waterfall
+		lineageTag: 587fff99-4cd9-426a-8501-e79c55564bdb
+
+	measure 'tooltip body 2' =
+			
+			var _sel  = SELECTEDVALUE(ChartColumns[ColumnName])
+			var _first = SWITCH(_sel,
+			"Volume", "Changes in Solded Quantity",
+			"Mix", "Changes in MIX of products",
+			"Price", "Changes in Weighted Average Price",
+			"COGS", "Changes in Weighted Average Cost of Product",
+			"Delisted SKUs", "Removal products from sale",
+			"New SKUs", "Adding new products")
+			var _am  = [Factor Amount]
+			var _am_form = IF(_am < 1000000, FORMAT(DIVIDE(ABS(_am), 1000), "# ###.0K"  ),  FORMAT(DIVIDE(ABS(_am), 1000000), "# ###.0M"  ))
+			var _updown = IF(_am < 0, "reduced" , IF(_am > 0, "increased" , "didn't affect"))
+			RETURN
+			 IF(_sel = "GP Act" || _sel = "GP PM", BLANK(),
+			 _updown & " Gross Profit Amount")
+		displayFolder: Tooltip Waterfall
+		lineageTag: 2cb3392f-e360-4e68-ba95-38e7658c7751
+
+	measure 'tooltip Header 2' =
+			
+			VAR _gp = [_0 Gross Profit]
+			VAR _gp_p = [_1 Gross Profit Prev]
+			var _vari = _gp - _gp_p
+			var _up_down = IF(_vari <0, "decreased ", IF(_vari>0, "increased ", "didn't change"))
+			return _up_down
+		displayFolder: Tooltip Waterfall
+		lineageTag: b552a394-841b-409f-953e-c90dc2e3f5dc
+
+	measure 'tooltip body 1' = ```
+			
+			var _sel  = SELECTEDVALUE(ChartColumns[ColumnName])
+			RETURN SWITCH(_sel,
+			"Volume", "Changes in Solded Quantity",
+			"Mix", "Changes in MIX of products",
+			"Price", "Changes in Weighted Average Price",
+			"COGS", "Changes in Weighted Average Cost of Product",
+			"Delisted SKUs", "Removal products from sale",
+			"New SKUs", "Adding new products",
+			BLANK())
+			
+			```
+		displayFolder: Tooltip Waterfall
+		lineageTag: b4624a0a-feec-43c0-a042-71bcc4f3965f
+
+	measure DynamicMeasure = ```
+			
+			VAR _both_periods = GetProductsWithSalesBothPeriods()
+			VAR _sales =
+			    SUMX (
+			        _both_periods,
+			        [_0 Sales]
+			    )
+			VAR _quant =
+			    SUMX (
+			        _both_periods,
+			        [_0 Quantity]
+			    )
+			VAR _price =
+			
+			       DIVIDE(_sales, _quant)
+			
+			VAR _cogs =
+			    SUMX (
+			        _both_periods,
+			        [_0 COGS]
+			    )
+			VAR _gp =
+			
+			        _sales - _cogs
+			
+			
+			RETURN 
+			SWITCH(
+			    SELECTEDVALUE(TableColumnLabel[SortOrder]),
+			    1, _quant ,
+			    2, _price,
+			    3, _sales ,
+			    4, _cogs,
+			    5, _gp,
+			    BLANK()
+			)
+			```
+		lineageTag: fb509d7f-5eff-4bcd-83aa-8f4460583329
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure dynamicMeasureprev = ```
+			
+			
+			VAR _both_periods = GetProductsWithSalesBothPeriods()
+			VAR _sales =
+			    SUMX (
+			        _both_periods,
+			        [_1 Sales Prev year]
+			    )
+			VAR _quant =
+			    SUMX (
+			        _both_periods,
+			        [_1 quantity prev]
+			    )
+			VAR _price =
+			        DIVIDE(_sales, _quant)
+			
+			VAR _cogs =
+			    SUMX (
+			        _both_periods,
+			        [_1 cogs prev]
+			    )
+			VAR _gp =
+			    _sales - _cogs
+			
+			RETURN 
+			SWITCH(
+			    SELECTEDVALUE(TableColumnLabel[SortOrder]),
+			    1, _quant ,
+			    2, _price,
+			    3, _sales ,
+			    4, _cogs,
+			    5, _gp,
+			    BLANK()
+			)
+			```
+		formatString: #,0.###############\ "₴";-#,0.###############\ "₴";#,0.###############\ "₴"
+		lineageTag: 72951c35-ffb7-477a-9de8-bb8b910c342d
+
+		annotation PBI_FormatHint = {"currencyCulture":"uk-UA"}
+
+	measure 'Table title' =
+			
+			var _sel = SELECTEDVALUE('Param Granularity level'[Parameter Order])
+			var _val = SWITCH(_sel,
+			0, "Category",
+			1, "Subcategory",
+			2, "Product")
+			RETURN "Performance Metrics breakdown on " & _val & " level"
+		displayFolder: Text titlles
+		lineageTag: 6316bd40-cbdd-41e5-9921-f6d68bfc7330
+
+	measure 'Title Description' = ```
+			
+			var _prof = [Delta Profit]
+			var _gp = [_0 Gross Profit]
+			var _prof_form =  IF(ABS(_prof) > 1000000, FORMAT(DIVIDE(ABS(_prof), 1000000), "# ###.0M UAH"  ),  FORMAT(DIVIDE(ABS(_prof), 1000), "# ###.0K UAH"  ))
+			var _gp_form =  IF(ABS(_gp) > 1000000, FORMAT(DIVIDE(ABS(_gp), 1000000), "# ###.0M UAH"  ),  FORMAT(DIVIDE(ABS(_gp), 1000), "# ###.0K UAH"  ))
+			var _pos = "This year's profit figures exceeded last year's results by "
+			var _neg = "This year's profit figures are lower than last year's results by "
+			var _even = "This year's profit figures are unchanged from last year. "
+			var _res = " and amounted to "
+			RETURN SWITCH(TRUE(),
+			_prof > 0, _pos & _prof_form & _res & _gp_form,
+			_prof < 0, _neg & _prof_form & _res & _gp_form,
+			 _even & _res & _gp_form 
+			
+			)
+			```
+		displayFolder: Text titlles
+		lineageTag: 2733e95a-188c-4197-86af-7ec516d45871
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: 81f959cf-3ce4-4e49-b1f8-eed2a30f57c1
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DAX = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 6c1b5dd73eab48f8a856d27a15373abf
+

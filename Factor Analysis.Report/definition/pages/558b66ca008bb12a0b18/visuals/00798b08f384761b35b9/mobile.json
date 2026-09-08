@@ -1,0 +1,704 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.7.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 62,
+    "z": 1000,
+    "height": 292,
+    "width": 324,
+    "tabOrder": 0
+  },
+  "objects": {
+    "label": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "default"
+        }
+      }
+    ],
+    "referenceLabel": [
+      {
+        "properties": {},
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.Quantity Sold",
+          "id": "field-5759ee0b-968b-2b7f-2941-3dafddc728f0",
+          "order": 2
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DAX"
+                  }
+                },
+                "Property": "label ref sales"
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.Revenue",
+          "id": "field-98d8eee8-fc47-8610-ffde-f6a8037f28c3",
+          "order": 2
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DAX"
+                  }
+                },
+                "Property": "label ref COGS"
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.COGS",
+          "id": "field-762b0660-9e30-5fd2-a08e-f1cda396ac03",
+          "order": 2
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DAX"
+                  }
+                },
+                "Property": "Label ref GP"
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.gross profit",
+          "id": "field-f9b7ee25-3f71-c3cc-9cb3-dcb28528f0b7",
+          "order": 2
+        }
+      }
+    ],
+    "referenceLabelDetail": [
+      {
+        "properties": {
+          "detailFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          },
+          "detailTransparency": {
+            "expr": {
+              "Literal": {
+                "Value": "100D"
+              }
+            }
+          },
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Quantity Sold",
+          "id": "field-bd7a0a7e-7785-0900-f8ac-4b2921667510"
+        }
+      },
+      {
+        "properties": {
+          "detailFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          },
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Revenue",
+          "id": "field-454440aa-f633-c4f8-ca6d-9bc94ecf640e"
+        }
+      },
+      {
+        "properties": {
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.COGS",
+          "id": "field-c424cf91-40be-1a0f-ee3b-5222ad469dcd"
+        }
+      },
+      {
+        "properties": {
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.COGS",
+          "id": "field-762b0660-9e30-5fd2-a08e-f1cda396ac03"
+        }
+      },
+      {
+        "properties": {
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.gross profit",
+          "id": "field-2d86bbc5-b379-a345-0a85-1664e054b2d7"
+        }
+      }
+    ],
+    "referenceLabelLayout": [
+      {
+        "properties": {
+          "labelSpace": {
+            "expr": {
+              "Literal": {
+                "Value": "2D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "default"
+        }
+      }
+    ],
+    "layout": [
+      {
+        "properties": {
+          "orientation": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          },
+          "columnCount": {
+            "expr": {
+              "Literal": {
+                "Value": "2L"
+              }
+            }
+          },
+          "rowCount": {
+            "expr": {
+              "Literal": {
+                "Value": "2L"
+              }
+            }
+          },
+          "cellPadding": {
+            "expr": {
+              "Literal": {
+                "Value": "6L"
+              }
+            }
+          }
+        }
+      },
+      {
+        "properties": {
+          "topOuterMargin": {
+            "expr": {
+              "Literal": {
+                "Value": "2L"
+              }
+            }
+          },
+          "leftOuterMargin": {
+            "expr": {
+              "Literal": {
+                "Value": "2L"
+              }
+            }
+          },
+          "rightOuterMargin": {
+            "expr": {
+              "Literal": {
+                "Value": "2L"
+              }
+            }
+          },
+          "bottomOuterMargin": {
+            "expr": {
+              "Literal": {
+                "Value": "2L"
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "default"
+        }
+      }
+    ],
+    "cardImage": [],
+    "image": [],
+    "referenceLabelTitle": [],
+    "referenceLabelValue": [
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Quantity Sold"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Quantity Sold",
+          "id": "field-bd7a0a7e-7785-0900-f8ac-4b2921667510"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Quantity Sold",
+          "id": "field-2025bd83-07e9-9e4b-caa3-0c96737bb4b4"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Revenue"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Revenue",
+          "id": "field-454440aa-f633-c4f8-ca6d-9bc94ecf640e"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Revenue",
+          "id": "field-615b7c9c-a0f0-fa84-0b2e-e7f099cc50a6"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Quantity Sold",
+          "id": "field-5759ee0b-968b-2b7f-2941-3dafddc728f0"
+        }
+      },
+      {
+        "properties": {
+          "valueFontColor": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Measure": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "DAX"
+                      }
+                    },
+                    "Property": "color label quant"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.Quantity Sold",
+          "id": "field-5759ee0b-968b-2b7f-2941-3dafddc728f0"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.Revenue",
+          "id": "field-98d8eee8-fc47-8610-ffde-f6a8037f28c3"
+        }
+      },
+      {
+        "properties": {
+          "valueFontColor": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Measure": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "DAX"
+                      }
+                    },
+                    "Property": "color label sales"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.Revenue",
+          "id": "field-98d8eee8-fc47-8610-ffde-f6a8037f28c3"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.COGS"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.COGS",
+          "id": "field-c424cf91-40be-1a0f-ee3b-5222ad469dcd"
+        }
+      },
+      {
+        "properties": {
+          "valueFontColor": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Measure": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "DAX"
+                      }
+                    },
+                    "Property": "color label COGS"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.COGS",
+          "id": "field-762b0660-9e30-5fd2-a08e-f1cda396ac03"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "10D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.gross profit",
+          "id": "field-2d86bbc5-b379-a345-0a85-1664e054b2d7"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.gross profit",
+          "id": "field-8fd09239-393b-c061-b3d7-dc4d64da15fa"
+        }
+      },
+      {
+        "properties": {
+          "valueFontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "DAX.gross profit",
+          "id": "field-f9b7ee25-3f71-c3cc-9cb3-dcb28528f0b7"
+        }
+      },
+      {
+        "properties": {
+          "valueFontColor": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Measure": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "DAX"
+                      }
+                    },
+                    "Property": "color label GP"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "selector": {
+          "data": [
+            {
+              "dataViewWildcard": {
+                "matchingOption": 0
+              }
+            }
+          ],
+          "metadata": "DAX.gross profit",
+          "id": "field-f9b7ee25-3f71-c3cc-9cb3-dcb28528f0b7"
+        }
+      }
+    ],
+    "value": [],
+    "outline": [],
+    "fillCustom": [],
+    "padding": [
+      {
+        "properties": {
+          "paddingUniform": {
+            "expr": {
+              "Literal": {
+                "Value": "1L"
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "default"
+        }
+      }
+    ],
+    "divider": []
+  },
+  "visualContainerObjects": {
+    "title": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "12D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "subTitle": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "background": [],
+    "border": [],
+    "spacing": [
+      {
+        "properties": {
+          "spaceAboveSubtitle": {
+            "expr": {
+              "Literal": {
+                "Value": "2D"
+              }
+            }
+          },
+          "spaceAbovePlotArea": {
+            "expr": {
+              "Literal": {
+                "Value": "2D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

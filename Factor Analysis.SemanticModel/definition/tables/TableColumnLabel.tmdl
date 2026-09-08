@@ -1,0 +1,40 @@
+table TableColumnLabel
+	lineageTag: 52437271-387b-418b-b340-9ead2d48769e
+
+	column MetricName
+		lineageTag: b43b3262-02e8-4dda-9ade-1a5e4bd7a916
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MetricName]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		formatString: 0
+		lineageTag: 2c076a95-2c45-43d7-8d5e-33ea3029493c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [SortOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TableColumnLabel = calculated
+		mode: import
+		source = ```
+				DATATABLE(
+				    "MetricName", STRING,
+				    "SortOrder", INTEGER,
+				    {
+				        
+				        {"QTY (ths. pcs.)", 1},
+				        {"Price (UAH)", 2},
+				        {"Sales (UAH ths.)", 3},
+				        {"COGS (UAH ths.)", 4},
+				        {"Gross Profit (UAH ths.)", 5}
+				    }
+				)
+				```
+
+	annotation PBI_Id = 27336d0b987f4e14b460867138f3092a
+

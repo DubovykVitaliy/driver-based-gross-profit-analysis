@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.7.0/schema.json",
+  "position": {
+    "x": 48,
+    "y": 52,
+    "z": 3000,
+    "height": 33,
+    "width": 227,
+    "tabOrder": 3000
+  },
+  "objects": {
+    "selection": [],
+    "general": [],
+    "data": [],
+    "padding": [],
+    "value": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "default"
+        }
+      }
+    ],
+    "layout": [],
+    "fillCustom": []
+  }
+}
