@@ -47,6 +47,6 @@ This Power BI dashboard provides a detailed breakdown of Year-over-Year (YoY) Gr
    ```bash
    git clone https://github.com/DubovykVitaliy/driver-based-gross-profit-analysis.git
    ```
-2. Open the `Factor Analysis.pbip` or `Factor Analysis.pbix` file in **Power BI Desktop**.
+2. Open the `Factor Analysis.pbix` file in **Power BI Desktop**.
 
 ---
