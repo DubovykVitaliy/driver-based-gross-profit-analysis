@@ -3,7 +3,8 @@
   "displayName": "opened filter pane",
   "name": "1057ba132d4ec0c9723a",
   "options": {
-    "targetVisualNames": []
+    "targetVisualNames": [],
+    "suppressData": true
   },
   "explorationState": {
     "version": "1.3",

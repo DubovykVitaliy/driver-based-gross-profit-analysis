@@ -3,7 +3,8 @@
   "displayName": "Table filter closed",
   "name": "e58a86107b760b073056",
   "options": {
-    "targetVisualNames": []
+    "targetVisualNames": [],
+    "suppressData": true
   },
   "explorationState": {
     "version": "1.40",

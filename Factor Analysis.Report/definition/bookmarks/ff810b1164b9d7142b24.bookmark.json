@@ -3,7 +3,8 @@
   "displayName": "Closed filter Pane",
   "name": "ff810b1164b9d7142b24",
   "options": {
-    "targetVisualNames": []
+    "targetVisualNames": [],
+    "suppressData": true
   },
   "explorationState": {
     "version": "1.3",

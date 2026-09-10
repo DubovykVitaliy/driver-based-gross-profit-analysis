@@ -3,7 +3,8 @@
   "displayName": "Table filter open",
   "name": "010e7223037478c04be5",
   "options": {
-    "targetVisualNames": []
+    "targetVisualNames": [],
+    "suppressData": true
   },
   "explorationState": {
     "version": "1.40",

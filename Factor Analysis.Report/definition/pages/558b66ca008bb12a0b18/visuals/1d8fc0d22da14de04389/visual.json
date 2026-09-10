@@ -1,0 +1,61 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "1d8fc0d22da14de04389",
+  "position": {
+    "x": 1462.657253473013,
+    "y": 1005.5768617626965,
+    "z": 14003,
+    "height": 74.625370075153725,
+    "width": 432.82714643589162,
+    "tabOrder": 7003
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "The complete model and code repository are available on GitHub at "
+                  },
+                  {
+                    "value": "DubovykVitaliy/driver-based-gross-profit-analysis",
+                    "textStyle": {
+                      "fontFamily": "Google Sans, Arial, sans-serif, Noto Color Emoji",
+                      "fontSize": "16px"
+                    },
+                    "url": "https://github.com/DubovykVitaliy/driver-based-gross-profit-analysis"
+                  },
+                  {
+                    "value": ".",
+                    "textStyle": {},
+                    "url": "https://github.com/DubovykVitaliy/driver-based-gross-profit-analysis"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
